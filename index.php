@@ -4,8 +4,6 @@ use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
 
-
- // confirm the GET request has site in the array 
 if(isset($_GET['site'])){
 
     // import the google api key for website insights retirieved from 
@@ -13,34 +11,25 @@ if(isset($_GET['site'])){
     $api =getenv("GOOGLE_API_KE");
     $site =$_GET['site'];
     
-    // Build url to send the request to capture the website details to google
     $adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
 
-    // Send the request to google using curl ]
     $curl_init = curl_init($adress);
 
-    // setup curls options for the get request
     curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
     
 
-    // capture the curl response 
     $response = curl_exec($curl_init);
 
-    // close the curl channel 
     curl_close($curl_init);
     
-    // decode the response in key value php array
     $googledata = json_decode($response,true);
 
 
-    // isolate the snap data from the response 
     $snapdata = $googledata["lighthouseResult"]["audits"]["full-page-screenshot"]["details"];
 
-    // Get the cuprute screenshot url
     $snap =$snapdata["screenshot"];
 
 
-    // setting up cloudinary configs from env vars as global
 	Configuration::instance([
 		'cloud' => [
 			'cloud_name' => getenv("CLOUDINARY_NAME"),
@@ -52,7 +41,6 @@ if(isset($_GET['site'])){
 		]
 	]);
 
-    // upload the file to cloudinary
 	$response2 = (new UploadApi())->upload($snap['data'], [
 		'resource_type' => 'image',
 		]
