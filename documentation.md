@@ -114,7 +114,7 @@ To begin, click [here](https://cloudinary.com/console) to set up a new account o
       CLOUDINARY_API_SECRET=
       GOOGLE_API_KE=
 ```
-On top of the html tag, initiate cloudinary:
+Use autoload to load all the dependancies install with php composer
 
 ```php
 "index.php"
@@ -130,7 +130,7 @@ use Cloudinary\Api\Upload\UploadApi;
  
 ```
 
-To proceed, we will have to first get the request site from the array
+Confirm that the get request has the required form variable filled.
 
 ```php
 "index.php"
@@ -139,7 +139,9 @@ if(isset($_GET['site'])){
   
 }
 ```
-Use the following  [link](https://developers.google.com/speed/docs/insights/v5/get-started) to import the google API link for website insights.
+Use the following  [link](https://developers.google.com/speed/docs/insights/v5/get-started) to 
+Generate the google API key for website insights.
+Attache the api key to the environmental variable so as to use it in future and ensure security of the application secrets.
 
 ```php
 "index.php"
@@ -151,29 +153,20 @@ if(isset($_GET['site'])){
 ```
 
 Build url to send the request to capture the website details to google
+using the google api key together with the user inputed url for the site.
 
 ```php
 "index.php"
-
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
 
 $adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
 ```
 
-Send the request to google using curl
+Initialize the curl request with the earlier generated url. In preparation for sending a get request to google with the site url.
 
 ```php
 "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
 
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
 
 $curl_init = curl_init($adress);
 ```
@@ -182,188 +175,52 @@ Setup curls options for the get request
 ```php
 "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
 curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
 ```
-capture the curl response 
+Execute the curl request and capture the curl response for extraction of the website details
+specifically the screenshot.
 
 ```php
 "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
 
 $response = curl_exec($curl_init);
 ```
- close the curl channel 
+It is always a good practice to close the curl channels to avoid hoarding of server resources.
+after response has been recieved.
 ```php
 "index.php"
-
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
-
-$response = curl_exec($curl_init);
 
 curl_close($curl_init);
 ```
 
- decode the response in key value php array
+ Decode the json response recieved into a key value pair php array.
  ```php
 "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
-
-$response = curl_exec($curl_init);
-
-curl_close($curl_init);
-
  $googledata = json_decode($response,true);
 
 ```
- isolate the snap data from the response 
+Extract image data from the decoded response to get.
 
 ```php
 "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
-
-$response = curl_exec($curl_init);
-
-curl_close($curl_init);
-
- $googledata = json_decode($response,true);
-
 $snapdata = $googledata["lighthouseResult"]["audits"]["full-page-screenshot"]["details"];
 ```
- Get the captured screenshot url
+ 
+Isolate the captured screenshot from the data extracted on previous section.
 
    ```php
 "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
-
-$response = curl_exec($curl_init);
-
-curl_close($curl_init);
-
- $googledata = json_decode($response,true);
-
-$snapdata = $googledata["lighthouseResult"]["audits"]["full-page-screenshot"]["details"];
-
 $snap =$snapdata["screenshot"];
 ```
- setting up cloudinary configs from env vars as global
-```
- "index.php"
+Initialize cloudinary instance gloabally across the application with secret keys from the env 
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
-
-$response = curl_exec($curl_init);
-
-curl_close($curl_init);
-
- $googledata = json_decode($response,true);
-
-$snapdata = $googledata["lighthouseResult"]["audits"]["full-page-screenshot"]["details"];
-
-$snap =$snapdata["screenshot"];
-
-Configuration::instance([
-		'cloud' => [
-			'cloud_name' => getenv("CLOUDINARY_NAME"),
-			'api_key' => getenv("CLOUDINARY_API_KEY"),
-			'api_secret' => getenv("CLOUDINARY_API_SECRET")
-		],
-		'url' => [
-			'secure' => true
-		]
-	]);
-```
- upload the file to cloudinary
 ```php
  "index.php"
 
-if(isset($_GET['site'])){
-  $api =getenv("GOOGLE_API_KE");
-    $site =$_GET['site'];
-}
-
-$adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=$site&category=CATEGORY_UNSPECIFIED&strategy=DESKTOP&key=$api";
-
-$curl_init = curl_init($adress);
-
-curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
-
-$response = curl_exec($curl_init);
-
-curl_close($curl_init);
-
- $googledata = json_decode($response,true);
-
-$snapdata = $googledata["lighthouseResult"]["audits"]["full-page-screenshot"]["details"];
-
-$snap =$snapdata["screenshot"];
-
 Configuration::instance([
 		'cloud' => [
 			'cloud_name' => getenv("CLOUDINARY_NAME"),
@@ -374,6 +231,11 @@ Configuration::instance([
 			'secure' => true
 		]
 	]);
+```
+ upload the screenshot base64 data to cloudinary for storage and capture the response to display on 
+ UI
+```php
+ "index.php"
 
   	$response2 = (new UploadApi())->upload($snap['data'], [
 		'resource_type' => 'image',
