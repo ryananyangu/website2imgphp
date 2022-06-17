@@ -39,7 +39,7 @@ To begin, click [here](https://cloudinary.com/console) to set up a new account o
 
 Our app's home component will include 2 sections; `html` and `php`. Start by including the following in the `index.php` directory
 
-```
+```php
 "index.php"
 
 
@@ -116,7 +116,7 @@ To begin, click [here](https://cloudinary.com/console) to set up a new account o
 ```
 On top of the html tag, initiate cloudinary:
 
-```
+```php
 "index.php"
 
 
@@ -132,7 +132,7 @@ use Cloudinary\Api\Upload\UploadApi;
 
 To proceed, we will have to first get the request site from the array
 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -141,7 +141,7 @@ if(isset($_GET['site'])){
 ```
 Use the following  [link](https://developers.google.com/speed/docs/insights/v5/get-started) to import the google API link for website insights.
 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -152,7 +152,7 @@ if(isset($_GET['site'])){
 
 Build url to send the request to capture the website details to google
 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -165,7 +165,7 @@ $adress="https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?
 
 Send the request to google using curl
 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -179,7 +179,7 @@ $curl_init = curl_init($adress);
 ```
 Setup curls options for the get request
  
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -195,7 +195,7 @@ curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
 ```
 capture the curl response 
 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -212,7 +212,7 @@ curl_setopt($curl_init,CURLOPT_RETURNTRANSFER,true);
 $response = curl_exec($curl_init);
 ```
  close the curl channel 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -232,7 +232,7 @@ curl_close($curl_init);
 ```
 
  decode the response in key value php array
- ```
+ ```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -255,7 +255,7 @@ curl_close($curl_init);
 ```
  isolate the snap data from the response 
 
-```
+```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -279,7 +279,7 @@ $snapdata = $googledata["lighthouseResult"]["audits"]["full-page-screenshot"]["d
 ```
  Get the captured screenshot url
 
-   ```
+   ```php
 "index.php"
 
 if(isset($_GET['site'])){
@@ -340,7 +340,7 @@ Configuration::instance([
 	]);
 ```
  upload the file to cloudinary
-```
+```php
  "index.php"
 
 if(isset($_GET['site'])){
