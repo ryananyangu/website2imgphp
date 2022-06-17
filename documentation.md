@@ -19,13 +19,30 @@ You can also get the project Github repo using [Github](/).
 Entry-level html and php knowledge.
 
 ## Setting Up the Sample Project
+Create a new folder: `website2imgphp`
+Inside the new folder's terminal use the command `componser init`. You need to have `php` and `composer` downloaded to your machine.
 
-Create a folder named `website2imgphp` //write sumn here. ill use it in the other documentation
+Follow the composer procedure which will help hand'e the necessary project dependancies. When asked to search for a package, serch for `clouidinary`
 
 
-Our app will include 2 sections; `html` and `php`. Start by including the following in the `index.php` directory
+## Cloudinary
+[Cloudinary](https://cloudinary.com/?ap=em) reffers an end-to-end image and video-management solution for websites and mobile apps, covering everything from image and video uploads, storage, manipulations, optimizations to delivery.Our app will use the media file online upload feature.
+To begin, click [here](https://cloudinary.com/console) to set up a new account or log into an existing one. We use the environment keys from the user dashboard to intergrate Cloudinary with our project. We will create a file named `env` and use the guide below to fill in the project configuration.
 
 ```
+      CLOUDINARY_NAME=
+      CLOUDINARY_API_KEY=
+      CLOUDINARY_API_SECRET=
+      GOOGLE_API_KE=
+```
+
+
+Our app's home component will include 2 sections; `html` and `php`. Start by including the following in the `index.php` directory
+
+```
+"index.php"
+
+
 <!doctype html>
 <html lang="en">
   <head>
